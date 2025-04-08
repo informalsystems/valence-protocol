@@ -96,7 +96,6 @@ pub enum LibraryConfig {
     ValenceOsmosisClLper(valence_osmosis_cl_lper::msg::LibraryConfig),
     ValenceOsmosisClWithdrawer(valence_osmosis_cl_withdrawer::msg::LibraryConfig),
     ValenceMarsLending(valence_mars_lending::msg::LibraryConfig),
-    ValenceMarsWithdrawer(valence_mars_withdrawer::msg::LibraryConfig),
 }
 
 impl LibraryConfig {
