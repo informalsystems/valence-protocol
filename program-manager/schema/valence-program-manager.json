@@ -834,6 +834,18 @@
               }
             },
             "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "ValenceNolusLending"
+            ],
+            "properties": {
+              "ValenceNolusLending": {
+                "$ref": "#/definitions/LibraryConfig13"
+              }
+            },
+            "additionalProperties": false
           }
         ]
       },
@@ -902,6 +914,35 @@
                 "$ref": "#/definitions/LibraryAccountType"
               }
             ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryConfig13": {
+        "type": "object",
+        "required": [
+          "denom",
+          "input_addr",
+          "output_addr",
+          "pool_addr"
+        ],
+        "properties": {
+          "denom": {
+            "type": "string"
+          },
+          "input_addr": {
+            "$ref": "#/definitions/LibraryAccountType"
+          },
+          "output_addr": {
+            "description": "Address of the output account",
+            "allOf": [
+              {
+                "$ref": "#/definitions/LibraryAccountType"
+              }
+            ]
+          },
+          "pool_addr": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1268,6 +1309,18 @@
               }
             },
             "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "required": [
+              "ValenceNolusLending"
+            ],
+            "properties": {
+              "ValenceNolusLending": {
+                "$ref": "#/definitions/LibraryConfigUpdate13"
+              }
+            },
+            "additionalProperties": false
           }
         ]
       },
@@ -1376,6 +1429,44 @@
               {
                 "type": "null"
               }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "LibraryConfigUpdate13": {
+        "type": "object",
+        "properties": {
+          "denom": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "input_addr": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/LibraryAccountType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "output_addr": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/LibraryAccountType"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pool_addr": {
+            "type": [
+              "string",
+              "null"
             ]
           }
         },
