@@ -23,13 +23,13 @@ pub enum QueryMsg {}
 #[cw_serde]
 #[derive(ValenceLibraryInterface)]
 pub struct LibraryConfig {
-    // Address of the input account 
+    // Address of the input account (Valence interchain account)
     pub input_addr: LibraryAccountType,
     /// Address of the output account
     pub output_addr: LibraryAccountType,
-    // Address of the credit manager contract
-    pub credit_manager_addr: String,
-    // Denom of the asset we are going to land
+    // Address of the pool contract
+    pub pool_addr: String,
+    // Denom of the asset we are going to lend
     pub denom: String,
 }
 
@@ -37,13 +37,13 @@ impl LibraryConfig {
     pub fn new(
         input_addr: impl Into<LibraryAccountType>,
         output_addr: impl Into<LibraryAccountType>,
-        credit_manager_addr: String,
+        pool_addr: String,
         denom: String,
     ) -> Self {
         LibraryConfig {
             input_addr: input_addr.into(),
             output_addr: output_addr.into(),
-            credit_manager_addr: credit_manager_addr,
+            pool_addr: pool_addr,
             denom,
         }
     }
@@ -51,9 +51,9 @@ impl LibraryConfig {
     fn do_validate(&self, api: &dyn cosmwasm_std::Api) -> Result<(Addr, Addr, Addr), LibraryError> {
         let input_addr = self.input_addr.to_addr(api)?;
         let output_addr = self.output_addr.to_addr(api)?;
-        let credit_manager_addr = api.addr_validate(&self.credit_manager_addr)?;
+        let pool_addr = api.addr_validate(&self.pool_addr)?;
 
-        Ok((input_addr, output_addr, credit_manager_addr))
+        Ok((input_addr, output_addr, pool_addr))
     }
 }
 
@@ -65,12 +65,12 @@ impl LibraryConfigValidation<Config> for LibraryConfig {
     }
 
     fn validate(&self, deps: Deps) -> Result<Config, LibraryError> {
-        let (input_addr, output_addr, credit_manager_addr) = self.do_validate(deps.api)?;
+        let (input_addr, output_addr, pool_addr) = self.do_validate(deps.api)?;
 
         Ok(Config {
             input_addr,
             output_addr,
-            credit_manager_addr: credit_manager_addr,
+            pool_addr: pool_addr,
             denom: self.denom.clone(),
         })
     }
@@ -90,9 +90,9 @@ impl LibraryConfigUpdate {
             config.output_addr = output_addr.to_addr(deps.api)?;
         }
 
-        // Next update credit_manager_addr (if needed)
-        if let Some(credit_manager_addr) = self.credit_manager_addr {
-            config.credit_manager_addr = deps.api.addr_validate(&credit_manager_addr)?;
+        // Next update pool_addr (if needed)
+        if let Some(pool_addr) = self.pool_addr {
+            config.pool_addr = deps.api.addr_validate(&pool_addr)?;
         }
 
         // Next update denom (if needed)
@@ -109,21 +109,16 @@ impl LibraryConfigUpdate {
 pub struct Config {
     pub input_addr: Addr,
     pub output_addr: Addr,
-    pub credit_manager_addr: Addr,
+    pub pool_addr: Addr,
     pub denom: String,
 }
 
 impl Config {
-    pub fn new(
-        input_addr: Addr,
-        output_addr: Addr,
-        credit_manager_addr: Addr,
-        denom: String,
-    ) -> Self {
+    pub fn new(input_addr: Addr, output_addr: Addr, pool_addr: Addr, denom: String) -> Self {
         Config {
             input_addr,
             output_addr,
-            credit_manager_addr: credit_manager_addr,
+            pool_addr: pool_addr,
             denom,
         }
     }

@@ -7090,6 +7090,7 @@ version = "0.1.0"
 dependencies = [
  "cosmwasm-schema 2.2.2",
  "cosmwasm-std 2.2.2",
+ "serde",
 ]
 
 [[package]]
@@ -7181,6 +7182,24 @@ dependencies = [
  "valence-account-utils",
  "valence-generic-ibc-transfer-library",
  "valence-ibc-utils",
+ "valence-library-base",
+ "valence-library-utils",
+ "valence-macros",
+]
+
+[[package]]
+name = "valence-nolus-lending"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-schema 2.2.2",
+ "cosmwasm-std 2.2.2",
+ "cw-ownable",
+ "cw-storage-plus 2.0.0",
+ "schemars",
+ "serde",
+ "thiserror 1.0.69",
+ "valence-account-utils",
+ "valence-lending-utils",
  "valence-library-base",
  "valence-library-utils",
  "valence-macros",
@@ -7362,6 +7381,7 @@ dependencies = [
  "valence-macros",
  "valence-mars-lending",
  "valence-neutron-ibc-transfer-library",
+ "valence-nolus-lending",
  "valence-osmosis-cl-lper",
  "valence-osmosis-cl-withdrawer",
  "valence-osmosis-gamm-lper",
