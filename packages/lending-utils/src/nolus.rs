@@ -1,4 +1,4 @@
-// Since nolus is using an older CosmWasm version, to make it compatible with our packages, we are going to redefine the messages here using Cosmwasm that we need
+// Since Nolus is using an older CosmWasm version, to make it compatible with our packages, we are going to redefine the messages here using Cosmwasm that we need
 // for our library
 // The content here is from https://github.com/nolus-protocol/nolus-money-market, which is the stable API for mars contracts
 

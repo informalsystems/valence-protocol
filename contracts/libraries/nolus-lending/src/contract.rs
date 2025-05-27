@@ -115,19 +115,13 @@ pub fn process_function(
 
             // Execute on behalf of input_addr with reply. On reply we will send the funds to the output address
             let execute_msg = execute_submsgs_on_behalf_of(
-                vec![SubMsg::reply_on_success(
-                    withdraw_msg,
-                    WITHDRAW_REPLY_ID,
-                )],
+                vec![SubMsg::reply_on_success(withdraw_msg, WITHDRAW_REPLY_ID)],
                 Some(to_json_string(&cfg)?),
-                &cfg.input_addr, 
+                &cfg.input_addr,
             )?;
 
             Ok(Response::new()
-                .add_submessage(SubMsg::reply_on_success(
-                    execute_msg,
-                    WITHDRAW_REPLY_ID,
-                ))
+                .add_submessage(SubMsg::reply_on_success(execute_msg, WITHDRAW_REPLY_ID))
                 .add_attribute("method", "burn"))
         }
     }
@@ -139,14 +133,16 @@ pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> Result<Response, LibraryEr
         WITHDRAW_REPLY_ID => {
             // Extract configuration from the reply payload
             let cfg: Config = valence_account_utils::msg::parse_valence_payload(&msg.result)?;
-           
+
             // Query account balance of input account after withdrawal
             let balance = deps
                 .querier
                 .query_balance(cfg.input_addr.clone(), cfg.denom.clone())?;
 
             if balance.amount.is_zero() {
-                return Err(LibraryError::ExecutionError("No withdrawn funds".to_string()));
+                return Err(LibraryError::ExecutionError(
+                    "No withdrawn funds".to_string(),
+                ));
             }
 
             // Transfer the withdrawn funds to the output address
