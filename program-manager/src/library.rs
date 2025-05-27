@@ -97,6 +97,7 @@ pub enum LibraryConfig {
     ValenceOsmosisClWithdrawer(valence_osmosis_cl_withdrawer::msg::LibraryConfig),
     ValenceMarsLending(valence_mars_lending::msg::LibraryConfig),
     ValenceNolusLending(valence_nolus_lending::msg::LibraryConfig),
+    ValenceElysLending(valence_elys_lending::msg::LibraryConfig),
 }
 
 impl LibraryConfig {

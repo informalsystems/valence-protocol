@@ -75,6 +75,7 @@ valence-osmosis-cl-lper              = { path = "contracts/libraries/osmosis-cl-
 valence-osmosis-cl-withdrawer        = { path = "contracts/libraries/osmosis-cl-withdrawer", features = ["library"] }
 valence-mars-lending                 = { path = "contracts/libraries/mars-lending", features = ["library"] }
 valence-nolus-lending                = { path = "contracts/libraries/nolus-lending", features = ["library"] }
+valence-elys-lending                 = { path = "contracts/libraries/elys-lending", features = ["library"] }
 
 # our packages
 valence-account-utils          = { path = "packages/account-utils" }
