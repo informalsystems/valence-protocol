@@ -82,7 +82,7 @@ pub fn process_function(
                     },
                 )?;
 
-            let balance_nlp: Uint128 = balance_nlpn_resp.balance.into();
+            let balance_nlp: Uint128 = balance_nlpn_resp.balance;
             if balance_nlp.is_zero() {
                 return Err(LibraryError::ExecutionError(
                     "No funds to withdraw".to_string(),
@@ -93,7 +93,7 @@ pub fn process_function(
             let withdrawal_amount = match amount {
                 // withdraw exact amount
                 Some(amt) => {
-                    if amt > balance_nlp.into() || amt.is_zero() {
+                    if amt > balance_nlp || amt.is_zero() {
                         return Err(LibraryError::ExecutionError(
                             "Withdraw amount is either zero or bigger than balance".to_string(),
                         ));

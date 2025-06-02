@@ -38,12 +38,12 @@ impl LibraryConfig {
     pub fn new(
         input_addr: impl Into<LibraryAccountType>,
         output_addr: impl Into<LibraryAccountType>,
-        pool_id: Uint64,
+        pool: Uint64,
     ) -> Self {
         LibraryConfig {
             input_addr: input_addr.into(),
             output_addr: output_addr.into(),
-            pool_id: pool_id,
+            pool_id: pool,
         }
     }
 
@@ -66,12 +66,12 @@ impl LibraryConfigValidation<Config> for LibraryConfig {
     }
 
     fn validate(&self, deps: Deps) -> Result<Config, LibraryError> {
-        let (input_addr, output_addr, pool_id) = self.do_validate(deps.api)?;
+        let (input_addr, output_addr, pool) = self.do_validate(deps.api)?;
 
         Ok(Config {
             input_addr,
             output_addr,
-            pool_id: pool_id,
+            pool_id: pool,
         })
     }
 }
@@ -106,11 +106,11 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(input_addr: Addr, output_addr: Addr, pool_id: Uint64) -> Self {
+    pub fn new(input_addr: Addr, output_addr: Addr, pool: Uint64) -> Self {
         Config {
             input_addr,
             output_addr,
-            pool_id: pool_id,
+            pool_id: pool,
         }
     }
 }

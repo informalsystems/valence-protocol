@@ -117,7 +117,7 @@ pub fn process_function(
             let withdrawal_amount = match amount {
                 // withdraw exact amount
                 Some(amt) => {
-                    if amt > balance_locked.amount.into() || amt.is_zero() {
+                    if amt > balance_locked.amount || amt.is_zero() {
                         return Err(LibraryError::ExecutionError(
                             "Withdraw amount is either zero or bigger than balance".to_string(),
                         ));
@@ -157,17 +157,19 @@ pub fn process_function(
                 sender: cfg.input_addr.to_string(),
                 pool_ids: vec![cfg.pool_id.into()],
             };
-
             #[allow(deprecated)]
             let claim_msg = CosmosMsg::Stargate {
                 type_url: "/elys.masterchef.MsgClaimRewards".to_string(),
                 value: Binary::from(claim_cosmos_msg.to_bytes().unwrap()),
             };
-
-            // Execute on behalf of input_addr
-            let execute_msg = execute_on_behalf_of(vec![claim_msg], &cfg.input_addr)?;
-
-            Ok(Response::new().add_message(execute_msg))
+            // Execute on behalf of input_addr with reply to handle reward transfer
+            let execute_msg = execute_submsgs_on_behalf_of(
+                vec![SubMsg::reply_on_success(claim_msg, CLAIM_REPLY_ID)],
+                Some(to_json_string(&cfg)?),
+                &cfg.input_addr,
+            )?;
+            Ok(Response::new()
+                .add_submessage(SubMsg::reply_on_success(execute_msg, CLAIM_REPLY_ID)))
         }
     }
 }

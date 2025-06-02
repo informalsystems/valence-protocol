@@ -64,9 +64,9 @@ pub struct QueryCommittedTokensLockedResponse {
 )]
 pub struct MsgBond {
     #[prost(string, tag = "1")]
-    pub creator: ::prost::alloc::string::String,
+    pub creator: String,
     #[prost(string, tag = "2")]
-    pub amount: ::prost::alloc::string::String,
+    pub amount: String,
     #[prost(uint64, tag = "3")]
     #[serde(alias = "poolID")]
     pub pool_id: u64,
@@ -83,9 +83,9 @@ pub struct MsgBond {
 )]
 pub struct MsgUnbond {
     #[prost(string, tag = "1")]
-    pub creator: ::prost::alloc::string::String,
+    pub creator: String,
     #[prost(string, tag = "2")]
-    pub amount: ::prost::alloc::string::String,
+    pub amount: String,
     #[prost(uint64, tag = "3")]
     #[serde(alias = "poolID")]
     pub pool_id: u64,
@@ -102,22 +102,21 @@ pub struct MsgUnbond {
 )]
 pub struct MsgClaimRewards {
     #[prost(string, tag = "1")]
-    pub sender: ::prost::alloc::string::String,
+    pub sender: String,
     #[prost(uint64, repeated, tag = "2")]
     #[serde(alias = "poolIDs")]
-    pub pool_ids: ::prost::alloc::vec::Vec<u64>,
+    pub pool_ids: Vec<u64>,
 }
 
+/// Queries pool information by pool ID from the Elys network
 pub fn query_pool(deps: &DepsMut<ElysQuery>, pool_id: u64) -> StdResult<PoolResponse> {
     let query = ElysQuery::QueryGetPool { pool_id };
-    let query_pool_response: Option<QueryGetPoolResponse> = deps.querier.query(&query.into()).ok();
-
-    // Check if pool exists, otherwise return an error
-    let pool_response =
-        query_pool_response.ok_or_else(|| StdError::generic_err("failed to query pool"))?;
-    let pool = pool_response
+    let query_pool_response: QueryGetPoolResponse = deps
+        .querier
+        .query(&query.into())
+        .map_err(|e| StdError::generic_err(format!("Failed to query pool {}: {}", pool_id, e)))?;
+    let pool = query_pool_response
         .pool
-        .ok_or_else(|| StdError::generic_err("pool not found"))?;
-
+        .ok_or_else(|| StdError::generic_err(format!("Pool {} not found", pool_id)))?;
     Ok(pool)
 }
