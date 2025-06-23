@@ -19,6 +19,8 @@
 - [Libraries](./libraries/_overview.md)
   - [Astroport LPer](./libraries/astroport_lper.md)
   - [Astroport Withdrawer](./libraries/astroport_withdrawer.md)
+  - [Duality LPer](./libraries/duality_lper.md)
+  - [Duality Withdrawer](./libraries/duality_withdrawer.md)
   - [Forwarder](./libraries/forwarder.md)
   - [Generic IBC Transfer](./libraries/generic_ibc_transfer.md)
   - [Neutron IBC Transfer](./libraries/neutron_ibc_transfer.md)

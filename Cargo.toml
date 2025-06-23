@@ -76,6 +76,8 @@ valence-osmosis-cl-withdrawer        = { path = "contracts/libraries/osmosis-cl-
 valence-mars-lending                 = { path = "contracts/libraries/mars-lending", features = ["library"] }
 valence-nolus-lending                = { path = "contracts/libraries/nolus-lending", features = ["library"] }
 valence-elys-lending                 = { path = "contracts/libraries/elys-lending", features = ["library"] }
+valence-duality-lper                 = { path = "contracts/libraries/duality-lper", features = ["library"] }
+valence-duality-withdrawer           = { path = "contracts/libraries/duality-withdrawer", features = ["library"] }
 
 # our packages
 valence-account-utils          = { path = "packages/account-utils" }
@@ -92,6 +94,7 @@ valence-program-registry-utils = { path = "packages/program-registry-utils" }
 valence-program-manager        = { path = "program-manager" }
 valence-program-registry       = { path = "contracts/program-registry", features = ["library"] }
 valence-lending-utils          = { path = "packages/lending-utils" }
+valence-duality-utils          = { path = "packages/duality-utils" }
 
 # dev-dependencies
 cw-multi-test        = { version = "2.1.1", features = ["cosmwasm_1_4"] }

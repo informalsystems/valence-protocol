@@ -7025,6 +7025,47 @@ dependencies = [
 ]
 
 [[package]]
+name = "valence-duality-lper"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-schema 2.2.2",
+ "cosmwasm-std 2.2.2",
+ "cw-ownable",
+ "schemars",
+ "valence-account-utils",
+ "valence-duality-utils",
+ "valence-library-base",
+ "valence-library-utils",
+ "valence-macros",
+]
+
+[[package]]
+name = "valence-duality-utils"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-schema 2.2.2",
+ "cosmwasm-std 2.2.2",
+ "schemars",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "valence-duality-withdrawer"
+version = "0.1.0"
+dependencies = [
+ "cosmwasm-schema 2.2.2",
+ "cosmwasm-std 2.2.2",
+ "cw-ownable",
+ "schemars",
+ "valence-account-utils",
+ "valence-duality-utils",
+ "valence-library-base",
+ "valence-library-utils",
+ "valence-macros",
+]
+
+[[package]]
 name = "valence-elys-lending"
 version = "0.1.0"
 dependencies = [
@@ -7395,6 +7436,8 @@ dependencies = [
  "valence-astroport-withdrawer",
  "valence-authorization",
  "valence-authorization-utils",
+ "valence-duality-lper",
+ "valence-duality-withdrawer",
  "valence-elys-lending",
  "valence-forwarder-library",
  "valence-generic-ibc-transfer-library",
