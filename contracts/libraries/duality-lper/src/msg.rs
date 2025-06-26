@@ -129,14 +129,10 @@ fn ensure_correct_pool(
     deps: &Deps,
 ) -> Result<(), LibraryError> {
     // Query the pool configuration
-    let pool_config_raw: String = deps.querier.query_wasm_smart(
-        pool_addr.to_string(),
+    let pool_config: valence_duality_utils::utils::PoolConfig = deps.querier.query_wasm_smart(
+        pool_addr,
         &valence_duality_utils::msg::QueryMsg::GetConfig {},
-    )?;
-
-    // Parse the pool configuration
-    let pool_config = valence_duality_utils::utils::parse_get_config_response(&pool_config_raw)
-        .map_err(|e| LibraryError::ExecutionError(format!("Failed to parse pool config: {}", e)))?;
+    ).map_err(|e| LibraryError::ExecutionError(format!("Failed to query pool config: {}", e)))?;
 
     // Validate the denoms of the pool against the provided assets
     if pool_config.pair_data.token_0.denom != assets.asset1

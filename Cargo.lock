@@ -7047,7 +7047,6 @@ dependencies = [
  "cosmwasm-std 2.2.2",
  "schemars",
  "serde",
- "serde_json",
 ]
 
 [[package]]
