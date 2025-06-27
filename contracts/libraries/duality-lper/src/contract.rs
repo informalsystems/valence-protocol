@@ -97,15 +97,10 @@ pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> Result<Response, LibraryEr
             let cfg: Config = valence_account_utils::msg::parse_valence_payload(&msg.result)?;
 
             // We need lp token denom from the pool config
-            let pool_config_raw: String = deps.querier.query_wasm_smart(
-                cfg.lp_config.pool_addr.to_string(),
+            let pool_config: valence_duality_utils::utils::PoolConfig = deps.querier.query_wasm_smart(
+                cfg.lp_config.pool_addr.clone(),
                 &valence_duality_utils::msg::QueryMsg::GetConfig {},
-            )?;
-
-            let pool_config =
-                valence_duality_utils::utils::parse_get_config_response(&pool_config_raw).map_err(
-                    |e| LibraryError::ExecutionError(format!("Failed to parse pool config: {}", e)),
-                )?;
+            ).map_err(|e| LibraryError::ExecutionError(format!("Failed to query pool config: {}", e)))?;        
 
             // Query lp token balance of the input address
             let balance = deps

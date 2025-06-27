@@ -58,15 +58,11 @@ pub fn process_function(
     match msg {
         FunctionMsgs::WithdrawLiquidity { amount } => {
             // We need lp token denom from the pool config
-            let pool_config_raw: String = deps.querier.query_wasm_smart(
-                cfg.pool_addr.to_string(),
+            let pool_config: valence_duality_utils::utils::PoolConfig = deps.querier.query_wasm_smart(
+                cfg.pool_addr.clone(),
                 &valence_duality_utils::msg::QueryMsg::GetConfig {},
-            )?;
+            ).map_err(|e| LibraryError::ExecutionError(format!("Failed to query pool config: {}", e)))?;        
 
-            let pool_config =
-                valence_duality_utils::utils::parse_get_config_response(&pool_config_raw).map_err(
-                    |e| LibraryError::ExecutionError(format!("Failed to parse pool config: {}", e)),
-                )?;
 
             // Query account balance of input account
             let balance_lp = deps
@@ -128,15 +124,11 @@ pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> Result<Response, LibraryEr
             let cfg: Config = valence_account_utils::msg::parse_valence_payload(&msg.result)?;
 
             // We need pool assets from the pool config
-            let pool_config_raw: String = deps.querier.query_wasm_smart(
-                cfg.pool_addr.to_string(),
+            let pool_config: valence_duality_utils::utils::PoolConfig = deps.querier.query_wasm_smart(
+                cfg.pool_addr.clone(),
                 &valence_duality_utils::msg::QueryMsg::GetConfig {},
-            )?;
+            ).map_err(|e| LibraryError::ExecutionError(format!("Failed to query pool config: {}", e)))?;        
 
-            let pool_config =
-                valence_duality_utils::utils::parse_get_config_response(&pool_config_raw).map_err(
-                    |e| LibraryError::ExecutionError(format!("Failed to parse pool config: {}", e)),
-                )?;
 
             // Query account balance of input account after withdrawal
             let balance_asset_1 = deps.querier.query_balance(
