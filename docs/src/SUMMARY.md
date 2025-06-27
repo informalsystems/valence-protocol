@@ -23,6 +23,8 @@
   - [Duality Withdrawer](./libraries/duality_withdrawer.md)
   - [Forwarder](./libraries/forwarder.md)
   - [Generic IBC Transfer](./libraries/generic_ibc_transfer.md)
+  - [Magma LPer](./libraries/magma_lper.md)
+  - [Magma Withdrawer](./libraries/magma_withdrawer.md)
   - [Neutron IBC Transfer](./libraries/neutron_ibc_transfer.md)
   - [Osmosis CL LPer](./libraries/osmosis_cl_lper.md)
   - [Osmosis CL Withdrawer](./libraries/osmosis_cl_withdrawer.md)
