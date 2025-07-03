@@ -1,4 +1,4 @@
-# Magma withdrawer library
+# Magma Withdrawer library
 
 The **Valence Magma Withdrawer library** allows users to **withdraw liquidity** from Magma Vault from an **input account** and receive the withdrawn tokens into an **output account**.
 
