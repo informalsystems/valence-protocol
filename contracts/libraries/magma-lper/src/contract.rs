@@ -59,8 +59,8 @@ pub fn process_function(
             token_min_amount_1,
         } => {
             let deposit_msg = valence_magma_utils::msg::DepositMsg {
-                amount0_min: token_min_amount_0.unwrap_or_default(),
-                amount1_min: token_min_amount_1.unwrap_or_default(),
+                amount0_min: token_min_amount_0.unwrap_or_else(|| "0".to_string()),
+                amount1_min: token_min_amount_1.unwrap_or_else(|| "0".to_string()),
                 to: cfg.output_addr.to_string(),
             };
 

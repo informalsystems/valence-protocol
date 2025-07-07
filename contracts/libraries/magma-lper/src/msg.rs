@@ -12,8 +12,8 @@ pub enum FunctionMsgs {
     /// Message to provide liquidity(deposit tokens).
     ProvideLiquidity {
         // default to 0 `token_min_amount` if not provided
-        token_min_amount_0: Option<Uint128>,
-        token_min_amount_1: Option<Uint128>,
+        token_min_amount_0: Option<String>,
+        token_min_amount_1: Option<String>,
     },
 }
 
