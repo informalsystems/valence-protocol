@@ -64,6 +64,8 @@ pub fn process_function(
                 to: cfg.output_addr.to_string(),
             };
 
+            let execute_msg = valence_magma_utils::msg::ExecuteMsg::Deposit(deposit_msg);
+
             let bal_asset_0 = deps
                 .querier
                 .query_balance(&cfg.input_addr, cfg.lp_config.asset_data.asset1.as_str())?;
@@ -73,7 +75,7 @@ pub fn process_function(
 
             let cosmos_msg: CosmosMsg = CosmosMsg::Wasm(WasmMsg::Execute {
                 contract_addr: cfg.lp_config.vault_addr.to_string(),
-                msg: to_json_binary(&deposit_msg)?,
+                msg: to_json_binary(&execute_msg)?,
                 funds: vec![bal_asset_0.clone(), bal_asset_1.clone()],
             });
 

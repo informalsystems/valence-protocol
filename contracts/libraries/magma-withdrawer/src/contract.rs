@@ -80,9 +80,11 @@ pub fn process_function(
                 to: cfg.output_addr.to_string(),
             };
 
+            let execute_msg = valence_magma_utils::msg::ExecuteMsg::Withdraw(withdraw_msg);
+
             let cosmos_msg: CosmosMsg = CosmosMsg::Wasm(WasmMsg::Execute {
                 contract_addr: cfg.vault_addr.to_string(),
-                msg: to_json_binary(&withdraw_msg)?,
+                msg: to_json_binary(&execute_msg)?,
                 funds: vec![],
             });
 
