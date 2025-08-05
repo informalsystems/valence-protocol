@@ -80,6 +80,7 @@ valence-duality-lper                 = { path = "contracts/libraries/duality-lpe
 valence-duality-withdrawer           = { path = "contracts/libraries/duality-withdrawer", features = ["library"] }
 valence-magma-lper                   = { path = "contracts/libraries/magma-lper", features = ["library"] }
 valence-magma-withdrawer             = { path = "contracts/libraries/magma-withdrawer", features = ["library"] }
+valence-vortex-lper                  = { path = "contracts/libraries/vortex-lper", features = ["library"] }
 
 # our packages
 valence-account-utils          = { path = "packages/account-utils" }
@@ -98,6 +99,7 @@ valence-program-registry       = { path = "contracts/program-registry", features
 valence-lending-utils          = { path = "packages/lending-utils" }
 valence-duality-utils          = { path = "packages/duality-utils" }
 valence-magma-utils            = { path = "packages/magma-utils" }
+valence-vortex-utils           = { path = "packages/vortex-utils" }
 
 # dev-dependencies
 cw-multi-test        = { version = "2.1.1", features = ["cosmwasm_1_4"] }
