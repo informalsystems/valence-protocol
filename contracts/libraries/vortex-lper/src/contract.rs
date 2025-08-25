@@ -2,19 +2,19 @@
 use cosmwasm_std::entry_point;
 
 use cosmwasm_std::{
-    from_json, to_json_binary, to_json_string, Binary, CosmosMsg, Deps, DepsMut, Env, MessageInfo,
+    from_json, to_json_binary, to_json_vec, Binary, CosmosMsg, Deps, DepsMut, Env, MessageInfo,
     Reply, Response, StdError, StdResult, SubMsg, WasmMsg,
 };
 use valence_library_utils::{
     error::LibraryError,
-    execute_on_behalf_of, execute_submsgs_on_behalf_of,
+    execute_on_behalf_of,
     msg::{ExecuteMsg, InstantiateMsg},
 };
 use valence_osmosis_utils::utils::cl_utils::query_cl_pool;
 use valence_vortex_utils::msg::CreatePositionMsg;
 
 use crate::{
-    msg::{Config, FunctionMsgs, LibraryConfig, LibraryConfigUpdate, QueryMsg},
+    msg::{Config, FunctionMsgs, LibraryConfig, LibraryConfigUpdate, QueryMsg, ReplyPayload},
     state::VORTEX_CONTRACT_ADDR,
 };
 
@@ -66,6 +66,13 @@ pub fn process_function(
             principal_token_min_amount,
             counterparty_token_min_amount,
         } => {
+            // Check if vortex contract already exists
+            if VORTEX_CONTRACT_ADDR.may_load(deps.storage)?.is_some() {
+                return Err(LibraryError::Std(StdError::generic_err(
+                    "Vortex contract already exists",
+                )));
+            }
+
             let instantiate_msg = valence_vortex_utils::msg::InstantiateMsg {
                 pool_id: cfg.lp_config.pool_id,
                 principal_denom: cfg.lp_config.asset_data.asset1.clone(),
@@ -105,21 +112,18 @@ pub fn process_function(
                 counterparty_token_min_amount,
             };
 
-            let payload_bin = to_json_binary(&payload)?;
-
-            let delegated_input_acc_msg = execute_submsgs_on_behalf_of(
-                vec![
-                    SubMsg::reply_on_success(instantiate_cosmos_msg, REPLY_ID_INSTANTIATE_VORTEX)
-                        .with_payload(payload_bin),
-                ],
-                Some(to_json_string(&cfg)?),
-                &cfg.input_addr,
-            )?;
+            let reply_payload = ReplyPayload {
+                config: cfg.clone(),
+                create_position_msg: payload.clone(),
+            };
 
             let inst_submsg =
-                SubMsg::reply_on_success(delegated_input_acc_msg, REPLY_ID_INSTANTIATE_VORTEX);
+                SubMsg::reply_on_success(instantiate_cosmos_msg, REPLY_ID_INSTANTIATE_VORTEX)
+                    .with_payload(to_json_vec(&reply_payload)?);
 
-            Ok(Response::default().add_submessage(inst_submsg))
+            Ok(Response::default()
+                .add_submessage(inst_submsg)
+                .add_attribute("method", "deposit"))
         }
         FunctionMsgs::WithdrawLiquidity {} => {
             let execute_msg = valence_vortex_utils::msg::ExecuteMsg::EndRound {};
@@ -164,11 +168,12 @@ pub fn process_function(
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> Result<Response, LibraryError> {
-    // Extract configuration from the reply payload
-    let cfg: Config = valence_account_utils::msg::parse_valence_payload(&msg.result)?;
-
     match msg.id {
         REPLY_ID_INSTANTIATE_VORTEX => {
+            let reply_payload: ReplyPayload = from_json(&msg.payload)?;
+
+            let cfg = reply_payload.config;
+
             let bytes = &msg
                 .result
                 .into_result()
@@ -183,7 +188,7 @@ pub fn reply(deps: DepsMut, _env: Env, msg: Reply) -> Result<Response, LibraryEr
                     StdError::generic_err(format!("failed to parse reply message: {e:?}"))
                 })?;
 
-            let create_position_msg: CreatePositionMsg = from_json(&msg.payload)?;
+            let create_position_msg: CreatePositionMsg = reply_payload.create_position_msg;
 
             VORTEX_CONTRACT_ADDR.save(
                 deps.storage,
@@ -248,6 +253,10 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
             let raw_config: LibraryConfig =
                 valence_library_utils::raw_config::query_raw_library_config(deps.storage)?;
             to_json_binary(&raw_config)
+        }
+        QueryMsg::GetVortexAddress {} => {
+            let addr = VORTEX_CONTRACT_ADDR.load(deps.storage)?;
+            to_json_binary(&addr)
         }
     }
 }

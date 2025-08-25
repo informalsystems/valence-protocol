@@ -8,6 +8,7 @@ use valence_library_utils::{
 };
 use valence_macros::{valence_library_query, ValenceLibraryInterface};
 use valence_osmosis_utils::utils::cl_utils::TickRange;
+use valence_vortex_utils::msg::CreatePositionMsg;
 #[cw_serde]
 pub enum FunctionMsgs {
     /// Message to provide liquidity(deposit tokens).
@@ -23,7 +24,11 @@ pub enum FunctionMsgs {
 #[cw_ownable_query]
 #[cw_serde]
 #[derive(QueryResponses)]
-pub enum QueryMsg {}
+pub enum QueryMsg {
+    /// Returns the vortex contract address
+    #[returns(String)]
+    GetVortexAddress {},
+}
 
 #[cw_serde]
 #[derive(ValenceLibraryInterface)]
@@ -93,6 +98,12 @@ pub struct Config {
     pub output_addr: Addr,
     pub output_addr_2: Addr,
     pub lp_config: LiquidityProviderConfig,
+}
+
+#[cw_serde]
+pub struct ReplyPayload {
+    pub config: Config,
+    pub create_position_msg: CreatePositionMsg,
 }
 
 impl LibraryConfigValidation<Config> for LibraryConfig {

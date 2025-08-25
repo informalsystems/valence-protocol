@@ -591,6 +591,20 @@
     "title": "QueryMsg",
     "oneOf": [
       {
+        "description": "Returns the vortex contract address",
+        "type": "object",
+        "required": [
+          "get_vortex_address"
+        ],
+        "properties": {
+          "get_vortex_address": {
+            "type": "object",
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      {
         "description": "Query to get the processor address.",
         "type": "object",
         "required": [
@@ -905,6 +919,11 @@
           "additionalProperties": false
         }
       }
+    },
+    "get_vortex_address": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "String",
+      "type": "string"
     },
     "ownership": {
       "$schema": "http://json-schema.org/draft-07/schema#",
